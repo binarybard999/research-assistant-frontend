@@ -1,0 +1,24 @@
+frontend/
+├── public/
+│   └── index.html
+├── src/
+│   ├── components/
+│   │   └── Upload/
+│   │       └── UploadForm.js       // Form for entering paper details & uploading PDF
+│   ├── pages/
+│   │   ├── Home.js                 // Simple home page with a link to upload
+│   │   └── UploadPage.js           // Page that renders the UploadForm component
+│   ├── redux/
+│   │   ├── store.js                // Redux store configuration
+│   │   └── slices/
+│   │       └── uploadSlice.js      // Redux slice for upload state & async action
+│   ├── routes/
+│   │   └── Routes.js               // Application routes
+│   ├── services/
+│   │   └── apiService.js           // Axios wrapper for API calls
+│   ├── styles/
+│   │   └── main.css                // Tailwind CSS and any custom styles
+│   ├── App.js                      // Main App component (sets up routing)
+│   └── index.js                    // Entry point; wraps App with Redux Provider
+├── package.json
+└── .env                          // Environment variables (e.g., REACT_APP_API_URL)
