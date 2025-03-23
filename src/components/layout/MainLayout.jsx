@@ -40,8 +40,8 @@ const MainLayout = () => {
             <div className="flex flex-col flex-1 overflow-hidden">
                 <Header toggleSidebar={toggleSidebar} />
 
-                <main className="flex-1 relative overflow-y-auto focus:outline-none pt-16">
-                    <div className="h-[calc(100vh-4rem)] py-6 px-4 sm:px-6 lg:px-8 max-w-full overflow-x-hidden overflow-y-auto">
+                <main className="flex-1 relative focus:outline-none pt-16">
+                    <div className="outlet-content">
                         <Outlet />
                     </div>
                 </main>
@@ -59,3 +59,27 @@ const MainLayout = () => {
 };
 
 export default MainLayout;
+
+
+
+// // In MainLayout.jsx - Detect which page is active
+// const location = useLocation();
+// const isChatPage = location.pathname.includes('/paper-chat') || location.pathname.includes('/papers/');
+
+// return (
+//     <div className="h-screen flex overflow-hidden bg-gray-50">
+//         {/* Sidebar */}
+//         <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+
+//         {/* Content area */}
+//         <div className="flex flex-col flex-1 overflow-hidden">
+//             <Header toggleSidebar={toggleSidebar} />
+
+//             <main className="flex-1 relative focus:outline-none pt-16">
+//                 <div className={`h-[calc(100vh-4rem)] ${isChatPage ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+//                     <Outlet />
+//                 </div>
+//             </main>
+//         </div>
+//     </div>
+// );

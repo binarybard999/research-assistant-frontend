@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "comment": "use 'vite --host' in the dev command to expose the frontend to the network",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

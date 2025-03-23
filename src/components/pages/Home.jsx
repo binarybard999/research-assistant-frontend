@@ -65,14 +65,15 @@ const Home = () => {
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16 items-center">
                         <div className="flex-shrink-0 flex items-center">
-                            <span className="text-2xl font-bold text-blue-600">Research Assistant</span>
+                            <span className="text-2xl font-bold text-blue-600 hidden sm:block">Research Assistant</span>
+                            <span className="text-2xl font-bold text-blue-600 sm:hidden">RA</span>
                         </div>
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-2 sm:space-x-4">
                             {isAuthenticated ? (
                                 <div className="flex items-center">
-                                    <button className="flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-3">
+                                    <button className="flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2 sm:mr-3">
                                         <span className="sr-only">View notifications</span>
-                                        <Bell className="h-6 w-6" />
+                                        <Bell className="h-5 w-5 sm:h-6 sm:w-6" />
                                     </button>
 
                                     <div className="relative" ref={userMenuRef}>
@@ -132,12 +133,12 @@ const Home = () => {
                                 </div>
                             ) : (
                                 <>
-                                    <Link to="/login" className="text-gray-700 hover:text-blue-600 font-medium">
+                                    <Link to="/login" className="text-gray-700 hover:text-blue-600 font-medium text-sm sm:text-base">
                                         Sign In
                                     </Link>
                                     <Link
                                         to="/register"
-                                        className="bg-blue-600 px-4 py-2 rounded-md text-white font-medium hover:bg-blue-700 transition"
+                                        className="bg-blue-600 px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-white font-medium hover:bg-blue-700 transition text-sm sm:text-base"
                                     >
                                         Get Started
                                     </Link>

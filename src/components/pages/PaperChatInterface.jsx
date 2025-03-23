@@ -229,7 +229,7 @@ const PaperChatInterface = () => {
     }
 
     return (
-        <div className="flex h-screen bg-gray-100 overflow-hidden">
+        <div className="flex h-full paper-chat bg-gray-100 overflow-hidden">
             {/* Sidebar */}
             <div className={`bg-white shadow-lg transition-all duration-300 ${sidebarOpen ? 'w-80' : 'w-0'} flex-shrink-0 relative`}>
                 {sidebarOpen && (
@@ -302,7 +302,7 @@ const PaperChatInterface = () => {
             </div>
 
             {/* Main Chat Area */}
-            <div className="flex-1 flex flex-col min-w-0 min-h-0">
+            <div className="flex-1 flex flex-col">
                 <div className="bg-white shadow-sm p-4 flex items-center">
                     {!sidebarOpen && (
                         <button
@@ -316,7 +316,11 @@ const PaperChatInterface = () => {
                     <h1 className="font-bold text-lg text-gray-800 truncate">{paper.title}</h1>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-4 bg-gray-50" ref={chatContainerRef}>
+                {/* This container scrolls independently */}
+                <div
+                    className="flex-1 overflow-y-auto p-4 bg-gray-50"
+                    ref={chatContainerRef}
+                >
                     {messages.map((msg, index) => (
                         <div
                             key={index}
@@ -361,6 +365,7 @@ const PaperChatInterface = () => {
                     <div ref={messagesEndRef} />
                 </div>
 
+                {/* Input area stays fixed at the bottom */}
                 <div className="bg-white p-4 border-t">
                     <form onSubmit={handleSubmit} className="flex gap-2">
                         <input

@@ -105,3 +105,15 @@
 .markdown-content p {
     margin-bottom: 1rem;
 }
+
+.paper-chat {
+    height: calc(100vh - 4rem);
+    overflow: hidden;
+    /* Prevent outer scrolling */
+}
+
+/* Allow other pages to scroll properly */
+.outlet-content:not(:has(.paper-chat)) {
+    overflow-y: auto;
+    height: calc(100vh - 4rem);
+}
