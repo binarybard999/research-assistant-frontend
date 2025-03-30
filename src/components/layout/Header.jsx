@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Menu, Search, Bell, User, Settings, ChevronDown } from 'lucide-react';
 import { logout } from '../../redux/slices/authSlice';
+import axios from 'axios';
 
 const Header = ({ toggleSidebar }) => {
     const { user, isAuthenticated } = useSelector(state => state.auth);
@@ -29,10 +30,22 @@ const Header = ({ toggleSidebar }) => {
         setUserMenuOpen(!userMenuOpen);
     };
 
-    const handleSignOut = () => {
-        dispatch(logout());
-        navigate('/login');
-        setUserMenuOpen(false);
+    const handleSignOut = async () => {
+        try {
+            // Call the backend logout endpoint to clear cookies
+            await axios.post('/api/users/logout');
+
+            // Clear local storage and session storage
+            localStorage.removeItem('persist:root');
+            sessionStorage.clear();
+
+            // Dispatch Redux action
+            dispatch(logout());
+
+            navigate('/login');
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
     };
 
     return (

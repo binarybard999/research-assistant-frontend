@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Mail, Lock, EyeOff, Eye, Loader2 } from 'lucide-react';
 import apiService from '../../services/apiService.js';
-import { loginSuccess } from '../../redux/slices/authSlice.js';
+import { loginSuccess, loginUser } from '../../redux/slices/authSlice.js';
 
 const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -19,34 +19,23 @@ const LoginPage = () => {
         setApiError(null);
 
         try {
-            // Make API call using the apiService
-            const response = await apiService.post('/api/v1/users/login', {
+            // Use the loginUser thunk instead of direct API call
+            const resultAction = await dispatch(loginUser({
                 email: data.email,
                 password: data.password,
-            });
-
-            // Dispatch login action with the token from response
-            dispatch(loginSuccess({
-                token: response.data.token,
-                user: response.data.user
             }));
 
-            // Navigate to dashboard after successful login
-            navigate('/dashboard');
+            // Check if the login was successful
+            if (loginUser.fulfilled.match(resultAction)) {
+                // Navigate to dashboard after successful login
+                navigate('/dashboard');
+            } else if (loginUser.rejected.match(resultAction)) {
+                // Handle login rejection
+                setApiError(resultAction.payload || 'Login failed. Please check your credentials.');
+            }
         } catch (error) {
             console.error('Login failed:', error);
-
-            // Handle error responses from the API
-            if (error.response) {
-                // The request was made and the server responded with a status code that falls out of the range of 2xx
-                setApiError(error.response.data.message || 'Login failed. Please check your credentials.');
-            } else if (error.request) {
-                // The request was made but no response was received
-                setApiError('No response from server. Please try again.');
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                setApiError('An error occurred. Please try again.');
-            }
+            setApiError('An error occurred. Please try again.');
         } finally {
             setIsLoading(false);
         }

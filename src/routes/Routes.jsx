@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { getCurrentUser } from '../redux/slices/authSlice';
 
 // Auth Pages
 import LoginPage from '../components/auth/LoginPage';
@@ -15,10 +17,22 @@ import DashboardPage from '../components/pages/DashboardPage';
 import AllPapersPage from '../components/pages/AllPapersPage';
 import PaperChatInterface from '../components/pages/PaperChatInterface';
 
-// Auth Guard
+// Auth Guard - Now uses Redux state instead of localStorage
 const AuthGuard = ({ children }) => {
-    // Check if user is authenticated
-    const isAuthenticated = localStorage.getItem('authToken');
+    const { isAuthenticated, loading } = useSelector(state => state.auth);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        // Try to get current user if we're not sure about authentication status
+        if (!isAuthenticated && !loading) {
+            dispatch(getCurrentUser());
+        }
+    }, [isAuthenticated, loading, dispatch]);
+
+    // Show loading state if we're checking authentication
+    if (loading) {
+        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    }
 
     // If not authenticated, redirect to login
     if (!isAuthenticated) {

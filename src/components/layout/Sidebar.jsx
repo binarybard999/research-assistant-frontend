@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Home, Upload, FileText, BookOpen, Users, Settings, LogOut, X } from 'lucide-react';
 import { logout } from '../../redux/slices/authSlice.js';
+import axios from 'axios';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
     const dispatch = useDispatch();
@@ -17,9 +18,22 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         { name: 'Settings', icon: <Settings className="h-5 w-5" />, path: '/settings' },
     ];
 
-    const handleSignOut = () => {
-        dispatch(logout());
-        navigate('/login');
+    const handleSignOut = async () => {
+        try {
+            // Call the backend logout endpoint to clear cookies
+            await axios.post('/api/users/logout');
+
+            // Clear local storage and session storage
+            localStorage.removeItem('persist:root');
+            sessionStorage.clear();
+
+            // Dispatch Redux action
+            dispatch(logout());
+
+            navigate('/login');
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
     };
 
     return (
