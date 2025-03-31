@@ -1,6 +1,6 @@
-import store from '../redux/store';
-import apiService from './apiService';
-import { logout, refreshToken } from '../redux/slices/authSlice';
+import store from '../redux/store.js';
+import apiService from './apiService.js';
+import { logout, refreshToken } from '../redux/slices/authSlice.js';
 
 let isRefreshing = false;
 let failedQueue = [];
