@@ -49,11 +49,11 @@ const PaperChatInterface = () => {
         const fetchPaperAndKnowledgeBase = async () => {
             try {
                 setLoading(true);
-                const paperResponse = await apiService.get(`/api/v1/papers/${id}`);
+                const paperResponse = await apiService.get(`/papers/${id}`);
                 setPaper(paperResponse.data);
 
                 try {
-                    const kbResponse = await apiService.get(`/api/v1/knowledge-base/${id}`);
+                    const kbResponse = await apiService.get(`/knowledge-base/${id}`);
                     setKnowledgeBase(kbResponse.data);
                 } catch (kbError) {
                     console.error('Knowledge base might not exist yet:', kbError);
@@ -61,7 +61,7 @@ const PaperChatInterface = () => {
 
                 // Fetch conversation history
                 try {
-                    const chatHistoryResponse = await apiService.get(`/api/v1/paper-chat/${id}/chat/history`);
+                    const chatHistoryResponse = await apiService.get(`/paper-chat/${id}/chat/history`);
                     if (chatHistoryResponse.data && chatHistoryResponse.data.length > 0) {
                         setMessages(chatHistoryResponse.data);
                     } else {
@@ -91,6 +91,7 @@ const PaperChatInterface = () => {
 
     useEffect(() => {
         scrollToBottom();
+        console.log("Messages updated:", messages);
     }, [messages]);
 
     const scrollToBottom = () => {
@@ -112,15 +113,18 @@ const PaperChatInterface = () => {
 
         try {
             // Send request to backend to get response from Gemini
-            const response = await apiService.post(`/api/v1/paper-chat/${id}/chat`, {
+            const response = await apiService.post(`/paper-chat/${id}/chat`, {
                 question: inputMessage
             });
+            console.log("Response:", response.data);
 
             if (response.data && response.data.assistantMessage) {
                 const botMessage = {
                     role: 'assistant',
                     content: response.data.assistantMessage.content
                 };
+
+                console.log("Bot message:", botMessage);
 
                 setMessages(msgs => [...msgs, botMessage]);
             }
@@ -169,7 +173,7 @@ const PaperChatInterface = () => {
             formData.append('abstract', uploadFormData.abstract);
             formData.append('file', uploadFormData.file);
 
-            const response = await apiService.post('/api/v1/papers/upload', formData);
+            const response = await apiService.post('/papers/upload', formData);
 
             setUploadSuccess(true);
             setUploadFormData({
@@ -188,7 +192,7 @@ const PaperChatInterface = () => {
 
             // Save the system message to the chat history
             try {
-                await apiService.post(`/api/v1/paper-chat/${id}/system`, {
+                await apiService.post(`/paper-chat/${id}/system`, {
                     content: systemMessage.content
                 });
             } catch (systemMsgError) {
@@ -197,7 +201,7 @@ const PaperChatInterface = () => {
 
             // Refresh the knowledge base
             try {
-                const kbResponse = await apiService.get(`/api/v1/knowledge-base/${id}`);
+                const kbResponse = await apiService.get(`/knowledge-base/${id}`);
                 setKnowledgeBase(kbResponse.data);
             } catch (kbError) {
                 console.error('Error refreshing knowledge base:', kbError);

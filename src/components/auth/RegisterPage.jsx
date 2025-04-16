@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { User, Mail, Lock, EyeOff, Eye, Loader2 } from 'lucide-react';
-import apiService from '../../services/apiService.js';
+import { registerUser } from '../../redux/slices/authSlice.js';
 
 const RegisterPage = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -20,21 +20,21 @@ const RegisterPage = () => {
         setApiError(null);
 
         try {
-            // Make API call using the apiService
-            await apiService.post('/api/v1/users/register', {
+            const resultAction = await dispatch(registerUser({
                 name: data.name,
                 email: data.email,
-                password: data.password
-            });
+                password: data.password,
+            }));
 
-            // Show success message or notification here if needed
-
-            // Navigate to login after successful registration
-            navigate('/login', {
-                state: {
-                    message: 'Registration successful! Please log in with your new account.'
-                }
-            });
+            if (registerUser.fulfilled.match(resultAction)) {
+                navigate('/login', {
+                    state: {
+                        message: 'Registration successful! Please log in with your new account.'
+                    }
+                });
+            } else {
+                setApiError(resultAction.payload || 'Registration failed. Please try again.');
+            }
         } catch (error) {
             console.error('Registration failed:', error);
 

@@ -7,7 +7,7 @@ export const loginUser = createAsyncThunk(
     async (credentials, { rejectWithValue }) => {
         try {
             const response = await apiService.post(
-                "/api/v1/users/login",
+                "/users/login",
                 credentials,
                 {
                     withCredentials: true, // Important for receiving cookies
@@ -27,7 +27,7 @@ export const registerUser = createAsyncThunk(
     async (userData, { rejectWithValue }) => {
         try {
             const response = await apiService.post(
-                "/api/v1/users/register",
+                "/users/register",
                 userData,
                 {
                     withCredentials: true, // Important for receiving cookies
@@ -49,7 +49,7 @@ export const refreshToken = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const response = await apiService.post(
-                "/api/v1/users/refresh-token",
+                "/users/refresh-token",
                 {},
                 {
                     withCredentials: true, // Important for sending cookies
@@ -71,7 +71,7 @@ export const logoutUser = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             await apiService.post(
-                "/api/v1/users/logout",
+                "/users/logout",
                 {},
                 {
                     withCredentials: true, // Important for sending cookies
@@ -90,7 +90,7 @@ export const getCurrentUser = createAsyncThunk(
     "auth/getCurrentUser",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await apiService.get("/api/v1/users/current-user", {
+            const response = await apiService.get("/users/current-user", {
                 withCredentials: true, // Important for sending cookies
             });
 

@@ -2,52 +2,58 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadPaper } from '../../redux/slices/uploadSlice.js';
-import { FileUp, Users, FileText, Loader2, Check, AlertCircle } from 'lucide-react';
+import { FileUp, Users, FileText, Loader2, Check, AlertCircle, Info } from 'lucide-react';
 
 const UploadForm = () => {
     const dispatch = useDispatch();
-    const { loading, error, paper } = useSelector((state) => state.upload);
+    const { loading, error, papers, progress, remainingUploads } = useSelector((state) => state.upload);
+    const { user } = useSelector((state) => state.auth);
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        watch,
-    } = useForm({
-        defaultValues: {
-            title: '',
-            authors: '',
-            abstract: '',
-        }
-    });
-
-    const selectedFile = watch('file')?.[0];
+    const { register, handleSubmit, formState: { errors }, watch } = useForm();
+    const selectedFiles = watch('files') || [];
 
     const onSubmit = (data) => {
-        if (!selectedFile) {
-            return;
-        }
-
         const formData = new FormData();
         formData.append('title', data.title);
         formData.append('authors', data.authors);
         formData.append('abstract', data.abstract);
-        formData.append('file', selectedFile);
+
+        // Append all files
+        Array.from(data.files).forEach(file => {
+            formData.append('files', file);
+        });
 
         dispatch(uploadPaper(formData));
     };
 
     return (
         <div className="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-lg">
-            <h2 className="text-2xl font-bold mb-6 text-blue-600 flex items-center gap-2">
-                <FileText className="h-6 w-6" />
-                Upload Research Paper
-            </h2>
+            <div className="mb-8">
+                <h2 className="text-2xl font-bold text-blue-600 flex items-center gap-2">
+                    <FileText className="h-6 w-6" />
+                    Upload Research Papers
+                </h2>
+                <div className="mt-2 bg-indigo-50 p-3 rounded-lg">
+                    <p className="text-sm text-indigo-700 flex items-center gap-2">
+                        <Info className="h-4 w-4" />
+                        {user.tier} Tier: {remainingUploads !== null ? remainingUploads : user.uploadLimits.concurrentPapers} uploads remaining this month
+                    </p>
+                </div>
+            </div>
 
             {error && (
                 <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md flex items-start gap-3">
                     <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
-                    <p className="text-red-700">{error}</p>
+                    <div>
+                        <p className="text-red-700 font-medium">{error.message}</p>
+                        {error.failedFiles && (
+                            <ul className="mt-2 text-sm text-red-600">
+                                {error.failedFiles.map((f, i) => (
+                                    <li key={i}>• {f.filename} - {f.error}</li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
                 </div>
             )}
 
@@ -92,7 +98,7 @@ const UploadForm = () => {
                 <div>
                     <label className="text-gray-700 font-medium mb-1 flex items-center gap-2">
                         <FileUp className="h-4 w-4" />
-                        Upload PDF File
+                        Upload PDF Files
                     </label>
                     <div className="mt-1 flex items-center justify-center w-full">
                         <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
@@ -101,24 +107,48 @@ const UploadForm = () => {
                                 <p className="mb-2 text-sm text-gray-500">
                                     <span className="font-semibold">Click to upload</span> or drag and drop
                                 </p>
-                                <p className="text-xs text-gray-500">PDF only (MAX. 10MB)</p>
+                                <p className="text-xs text-gray-500">
+                                    Multiple PDFs allowed (MAX. {user.uploadLimits.concurrentPapers} files)
+                                </p>
                             </div>
                             <input
-                                {...register('file', { required: 'Please upload a PDF file' })}
+                                {...register('files', {
+                                    required: 'Please upload at least one PDF file',
+                                    validate: {
+                                        withinLimit: files =>
+                                            files.length <= user.uploadLimits.concurrentPapers ||
+                                            `Exceeds ${user.tier} tier limit of ${user.uploadLimits.concurrentPapers} files`
+                                    }
+                                })}
                                 type="file"
+                                multiple
                                 accept="application/pdf"
                                 className="hidden"
                             />
                         </label>
                     </div>
-                    {selectedFile && (
-                        <p className="mt-2 text-sm text-gray-600 flex items-center gap-1">
-                            <Check className="h-4 w-4 text-green-500" />
-                            {selectedFile.name}
-                        </p>
+
+                    {selectedFiles.length > 0 && (
+                        <div className="mt-4 space-y-2">
+                            {Array.from(selectedFiles).map((file, index) => (
+                                <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                    <span className="text-sm text-gray-600 flex items-center gap-2">
+                                        <FileText className="h-4 w-4" />
+                                        {file.name}
+                                    </span>
+                                    <span className="text-xs text-gray-500">
+                                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
                     )}
-                    {errors.file && (
-                        <p className="mt-1 text-sm text-red-600">{errors.file.message}</p>
+
+                    {errors.files && (
+                        <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
+                            <AlertCircle className="h-4 w-4" />
+                            {errors.files.message}
+                        </p>
                     )}
                 </div>
 
@@ -130,23 +160,35 @@ const UploadForm = () => {
                     {loading ? (
                         <>
                             <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                            Uploading...
+                            Uploading {progress}%...
                         </>
                     ) : (
-                        'Submit Paper'
+                        `Upload ${selectedFiles.length} Paper${selectedFiles.length !== 1 ? 's' : ''}`
                     )}
                 </button>
             </form>
 
-            {paper && (
-                <div className="mt-6 p-5 bg-green-50 border border-green-200 rounded-md">
-                    <div className="flex items-center gap-2 text-green-700 font-bold mb-2">
-                        <Check className="h-5 w-5" />
-                        Paper Uploaded Successfully
-                    </div>
-                    <p className="mb-1"><span className="font-medium">Title:</span> {paper.title}</p>
-                    <p className="mb-1"><span className="font-medium">Authors:</span> {paper.authors}</p>
-                    <p className="text-sm text-green-600 mt-2">Your submission is now being processed</p>
+            {papers.length > 0 && (
+                <div className="mt-6 space-y-4">
+                    {papers.map((paper, index) => (
+                        <div key={index} className="p-4 bg-green-50 border border-green-200 rounded-md">
+                            <div className="flex items-center gap-2 text-green-700 font-bold mb-2">
+                                {paper.processingProgress === 100 ? (
+                                    <Check className="h-5 w-5" />
+                                ) : (
+                                    <Loader2 className="h-5 w-5 animate-spin" />
+                                )}
+                                Paper #{index + 1} {paper.processingProgress === 100 ? 'Uploaded' : 'Processing'}
+                            </div>
+                            <p className="mb-1"><span className="font-medium">Title:</span> {paper.title}</p>
+                            <div className="mt-2 h-2 bg-green-100 rounded-full">
+                                <div
+                                    className="h-2 bg-green-500 rounded-full transition-all"
+                                    style={{ width: `${paper.processingProgress}%` }}
+                                />
+                            </div>
+                        </div>
+                    ))}
                 </div>
             )}
         </div>

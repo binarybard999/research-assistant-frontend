@@ -20,8 +20,9 @@ const AllPapersPage = () => {
         const fetchPapers = async () => {
             try {
                 setLoading(true);
-                const response = await apiService.get('/api/v1/papers/');
+                const response = await apiService.get('/papers/');
                 setPapers(response.data);
+                console.log(response.data);
                 setError(null);
             } catch (err) {
                 console.error('Error fetching papers:', err);
@@ -73,6 +74,7 @@ const AllPapersPage = () => {
 
     const handlePaperClick = (paper) => {
         setSelectedPaper(paper);
+        console.log(paper);
         setShowDetailsDialog(true);
     };
 
@@ -86,7 +88,7 @@ const AllPapersPage = () => {
 
         try {
             setDeleteLoading(true);
-            await apiService.delete(`/api/v1/papers/${paperToDelete._id}`);
+            await apiService.delete(`/papers/${paperToDelete._id}`);
 
             // Remove the deleted paper from state
             setPapers(papers.filter(paper => paper._id !== paperToDelete._id));
@@ -470,8 +472,9 @@ const AllPapersPage = () => {
                                             <div>
                                                 <span className="text-xs text-gray-500">Status:</span>
                                                 <p className="text-sm">
-                                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${selectedPaper.summary ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                                                        {selectedPaper.summary ? 'Analyzed' : 'Not Analyzed'}
+                                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${selectedPaper.knowledgeBase?.aggregatedSummary || selectedPaper.summary ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                                                        }`}>
+                                                        {selectedPaper.knowledgeBase?.aggregatedSummary || selectedPaper.summary ? 'Analyzed' : 'Not Analyzed'}
                                                     </span>
                                                 </p>
                                             </div>
