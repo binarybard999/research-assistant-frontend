@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Home, Upload, FileText, BookOpen, Users, Settings, LogOut, X } from 'lucide-react';
-import { logout } from '../../redux/slices/authSlice.js';
+import { logout } from '../redux/slices/authSlice.js';
 import axios from 'axios';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {

@@ -1,9 +1,13 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // Defaults to localStorage
+
 import uploadReducer from './slices/uploadSlice.js';
 import authReducer from './slices/authSlice.js';
 import toastReducer from './slices/toastSlice.js';
+import libraryReducer from './slices/librarySlice.js';
+import readingListReducer from './slices/readingListSlice.js';
+import activityReducer from './slices/activitySlice.js';
 
 // Persist config for auth slice
 const authPersistConfig = {
@@ -12,18 +16,33 @@ const authPersistConfig = {
     whitelist: ['user', 'accessToken', 'refreshToken', 'isAuthenticated'], // Only persist necessary fields
 };
 
-const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+// Persist config for library
+const libraryPersistConfig = {
+    key: 'library',
+    storage,
+    whitelist: ['favorites'], // Only persist favorites
+};
+
+// Root reducer with persistence configuration
+const rootReducer = combineReducers({
+    upload: uploadReducer,
+    auth: persistReducer(authPersistConfig, authReducer),
+    toast: toastReducer,
+    library: persistReducer(libraryPersistConfig, libraryReducer),
+    lists: readingListReducer,
+    activity: activityReducer,
+});
 
 const store = configureStore({
-    reducer: {
-        upload: uploadReducer,
-        auth: persistedAuthReducer,
-        toast: toastReducer,
-    },
+    reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
-            serializableCheck: false, // Required to prevent redux-persist warnings
+            serializableCheck: {
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+                ignoredPaths: ['payload.headers', 'payload.config', 'payload.request'],
+            },
         }),
+    devTools: process.env.NODE_ENV !== 'production',
 });
 
 export const persistor = persistStore(store);

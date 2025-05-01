@@ -12,7 +12,7 @@ import {
     Check,
     Loader2
 } from 'lucide-react';
-import apiService from '../../services/apiService';
+import apiService from '../services/apiService';
 
 import ReactMarkdown from 'react-markdown';
 import rehypeKatex from 'rehype-katex';

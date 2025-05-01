@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle, Loader2 } from 'lucide-react';
-import { removeToast } from '../../store/slices/toastSlice';
+import { removeToast } from '../../redux/slices/toastSlice';
 
 const Toast = ({
     id,

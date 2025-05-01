@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { User, Mail, Lock, EyeOff, Eye, Loader2 } from 'lucide-react';
-import { registerUser } from '../../redux/slices/authSlice.js';
+import { registerUser } from '../redux/slices/authSlice.js';
 
 const RegisterPage = () => {
     const [showPassword, setShowPassword] = useState(false);

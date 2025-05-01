@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { selectToasts } from '../../store/slices/toastSlice';
+import { selectToasts } from '../../redux/slices/toastSlice';
 import Toast from './Toast';
 
 const ToastContainer = () => {

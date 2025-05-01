@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Menu, Search, Bell, User, Settings, ChevronDown } from 'lucide-react';
-import { logout } from '../../redux/slices/authSlice';
+import { logout } from '../redux/slices/authSlice';
 import axios from 'axios';
 
 const Header = ({ toggleSidebar }) => {

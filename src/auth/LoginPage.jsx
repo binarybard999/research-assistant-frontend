@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Mail, Lock, EyeOff, Eye, Loader2 } from 'lucide-react';
-import apiService from '../../services/apiService.js';
-import { loginSuccess, loginUser } from '../../redux/slices/authSlice.js';
+import apiService from '../services/apiService.js';
+import { loginSuccess, loginUser } from '../redux/slices/authSlice.js';
 
 const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false);

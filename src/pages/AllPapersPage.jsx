@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Search, Filter, Download, Calendar, Tag, ExternalLink, Loader2, MessageSquare, Edit, Trash2 } from 'lucide-react'; import apiService from '../../services/apiService';
+import { FileText, Search, Filter, Download, Calendar, Tag, ExternalLink, Loader2, MessageSquare, Edit, Trash2 } from 'lucide-react'; import apiService from '../services/apiService';
 
 const AllPapersPage = () => {
     const [papers, setPapers] = useState([]);

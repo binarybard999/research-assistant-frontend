@@ -4,18 +4,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getCurrentUser } from '../redux/slices/authSlice';
 
 // Auth Pages
-import LoginPage from '../components/auth/LoginPage';
-import RegisterPage from '../components/auth/RegisterPage';
+import LoginPage from '../auth/LoginPage';
+import RegisterPage from '../auth/RegisterPage';
 
 // Layout
-import MainLayout from '../components/layout/MainLayout';
+import MainLayout from '../layout/MainLayout';
 
 // Pages
-import Home from '../components/pages/Home';
-import UploadPage from '../components/pages/UploadPage';
-import DashboardPage from '../components/pages/DashboardPage';
-import AllPapersPage from '../components/pages/AllPapersPage';
-import PaperChatInterface from '../components/pages/PaperChatInterface';
+import Home from '../pages/Home';
+import UploadPage from '../pages/UploadPage';
+import DashboardPage from '../pages/DashboardPage';
+import AllPapersPage from '../pages/AllPapersPage';
+import PaperChatInterface from '../pages/PaperChatInterface';
+import LibraryPage from '../pages/LibraryPage';
 
 // Auth Guard - Now uses Redux state instead of localStorage
 const AuthGuard = ({ children }) => {
@@ -67,7 +68,8 @@ const AppRoutes = () => {
 
                 <Route path="/papers/:id/chat" element={<PaperChatInterface />} />
 
-                <Route path="/library" element={<div className="p-4 bg-white rounded-lg shadow">Library Page (Coming Soon)</div>} />
+                {/* <Route path="/library" element={<div className="p-4 bg-white rounded-lg shadow">Library Page (Coming Soon)</div>} /> */}
+                <Route path="/library" element={<LibraryPage />} />
                 <Route path="/collaborators" element={<div className="p-4 bg-white rounded-lg shadow">Collaborators Page (Coming Soon)</div>} />
                 <Route path="/settings" element={<div className="p-4 bg-white rounded-lg shadow">Settings Page (Coming Soon)</div>} />
             </Route>
