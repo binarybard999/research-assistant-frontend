@@ -64,9 +64,12 @@ export const deleteList = createAsyncThunk(
 
 export const addToList = createAsyncThunk(
     'lists/add',
-    async ({ listId, paperId }, { rejectWithValue }) => {
+    async ({ listId, paperIds }, { rejectWithValue }) => { // Changed to paperIds
         try {
-            const res = await apiService.post('/reading-lists/add', { listId, paperId });
+            const res = await apiService.post('/reading-lists/add', {
+                listId,
+                paperIds // Send array of IDs
+            });
             return res.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || 'Failed to add paper to list');
@@ -88,11 +91,11 @@ export const removeFromList = createAsyncThunk(
 
 export const addCollaborator = createAsyncThunk(
     'lists/addCollaborator',
-    async ({ listId, email, role }, { rejectWithValue }) => {
+    async ({ listId, userId, role }, { rejectWithValue }) => {
         try {
             const res = await apiService.post('/reading-lists/collaborator', {
                 listId,
-                collaboratorEmail: email,
+                userId,
                 role
             });
             return res.data;
@@ -140,10 +143,10 @@ const readingListSlice = createSlice({
 
             // Update list cases
             .addCase(updateList.fulfilled, (state, action) => {
-                const index = state.lists.findIndex(list => list._id === action.payload._id);
-                if (index !== -1) {
-                    state.lists[index] = action.payload;
-                }
+                const updatedList = action.payload;
+                state.lists = state.lists.map(list =>
+                    list._id === updatedList._id ? updatedList : list
+                );
             })
 
             // Delete list cases
@@ -172,11 +175,17 @@ const readingListSlice = createSlice({
 
             // Add collaborator cases
             .addCase(addCollaborator.fulfilled, (state, action) => {
-                const index = state.lists.findIndex(list => list._id === action.payload._id);
+                const updatedList = action.payload;
+                const index = state.lists.findIndex(l => l._id === updatedList._id);
                 if (index !== -1) {
-                    state.lists[index] = action.payload;
+                    state.lists[index] = updatedList;
                 }
-            });
+                // Also update public lists if needed
+                const publicIndex = state.publicLists.findIndex(l => l._id === updatedList._id);
+                if (publicIndex !== -1) {
+                    state.publicLists[publicIndex] = updatedList;
+                }
+            })
     }
 });
 

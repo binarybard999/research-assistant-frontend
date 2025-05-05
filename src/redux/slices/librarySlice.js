@@ -55,7 +55,7 @@ export const toggleFavorite = createAsyncThunk(
     async (paperId, { rejectWithValue }) => {
         try {
             const res = await apiService.patch(`/library/papers/${paperId}/favorite`);
-            return res.data.paper;
+            return { paperId, isFavorite: res.data.isFavorite };
         } catch (error) {
             return rejectWithValue(error.response?.data || 'Failed to toggle favorite');
         }
@@ -182,21 +182,23 @@ const librarySlice = createSlice({
 
             // Toggle favorite cases
             .addCase(toggleFavorite.fulfilled, (state, action) => {
-                // Update paper in all papers list
-                const paperIndex = state.all.findIndex(p => p._id === action.payload._id);
+                const { paperId, isFavorite } = action.payload;
+
+                // Update main papers list
+                const paperIndex = state.all.findIndex(p => p._id === paperId);
                 if (paperIndex !== -1) {
-                    state.all[paperIndex] = action.payload;
+                    if (!state.all[paperIndex].metadata) state.all[paperIndex].metadata = {};
+                    state.all[paperIndex].metadata.isFavorite = isFavorite;
                 }
 
-                // Update favorite status in favorites list
-                if (action.payload.isFavorite) {
-                    // Add to favorites if not already there
-                    if (!state.favorites.some(p => p._id === action.payload._id)) {
-                        state.favorites.push(action.payload);
+                // Update favorites list
+                if (isFavorite) {
+                    if (!state.favorites.some(p => p._id === paperId)) {
+                        const paper = state.all.find(p => p._id === paperId);
+                        if (paper) state.favorites.push(paper);
                     }
                 } else {
-                    // Remove from favorites
-                    state.favorites = state.favorites.filter(p => p._id !== action.payload._id);
+                    state.favorites = state.favorites.filter(p => p._id !== paperId);
                 }
             })
 
