@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { Search, Filter, SlidersHorizontal, Bookmark, TrendingUp, Clock } from 'lucide-react';
+import { Filter, SlidersHorizontal, Bookmark, FileText, Star, List } from 'lucide-react';
+import { SearchBar } from './SearchBar';
+
+const FileIcon = () => <FileText className="h-5 w-5 text-gray-400" />;
+const StarIcon = () => <Star className="h-5 w-5 text-gray-400" />;
+const ListIcon = () => <List className="h-5 w-5 text-gray-400" />;
 
 export const LibraryHeader = ({
     papersCount,
@@ -34,16 +39,7 @@ export const LibraryHeader = ({
 
             {/* Search and filters - Desktop */}
             <div className="hidden md:flex flex-wrap gap-4 justify-between items-center">
-                <div className="relative flex-grow max-w-md">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                    <input
-                        type="text"
-                        placeholder="Search papers by title, author, or content..."
-                        className="pl-10 border border-gray-300 px-4 py-2.5 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                        value={searchTerm}
-                        onChange={(e) => onSearchChange(e.target.value)}
-                    />
-                </div>
+                <SearchBar searchTerm={searchTerm} onSearchChange={onSearchChange} />
 
                 <div className="flex gap-3">
                     <FilterSelect
@@ -72,15 +68,8 @@ export const LibraryHeader = ({
 
             {/* Search and Filters Toggle - Mobile */}
             <div className="md:hidden">
-                <div className="relative mb-4">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                    <input
-                        type="text"
-                        placeholder="Search papers..."
-                        className="pl-10 border border-gray-300 px-3 py-2 rounded-lg w-full"
-                        value={searchTerm}
-                        onChange={(e) => onSearchChange(e.target.value)}
-                    />
+                <div className="mb-4">
+                    <SearchBar searchTerm={searchTerm} onSearchChange={onSearchChange} />
                 </div>
 
                 <button
@@ -127,64 +116,39 @@ export const LibraryHeader = ({
         </div>
     );
 };
-
+     
 const FilterSelect = ({ value, onChange, options, icon }) => (
-    <div className="relative inline-block">
-        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+    <div className="relative">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             {icon}
         </div>
         <select
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="pl-10 pr-8 py-2.5 border border-gray-300 rounded-lg bg-white appearance-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            className="appearance-none pl-10 pr-8 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
         >
-            {options.map((option) => (
+            {options.map(option => (
                 <option key={option.value} value={option.value}>
                     {option.label}
                 </option>
             ))}
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-            <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            <svg className="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
         </div>
     </div>
 );
 
 const StatItem = ({ value, label, icon }) => (
-    <div className="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-lg">
-        <div className="text-gray-500">
+    <div className="flex items-center gap-2">
+        <div className="bg-gray-100 p-2 rounded-lg">
             {icon}
         </div>
         <div>
-            <span className="text-xl font-semibold block text-gray-900">{value}</span>
-            <span className="text-xs text-gray-500">{label}</span>
+            <div className="font-semibold text-gray-900">{value}</div>
+            <div className="text-xs text-gray-500">{label}</div>
         </div>
     </div>
-);
-
-// Icons
-const FileIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-        <polyline points="14 2 14 8 20 8" />
-    </svg>
-);
-
-const StarIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
-);
-
-const ListIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="8" y1="6" x2="21" y2="6" />
-        <line x1="8" y1="12" x2="21" y2="12" />
-        <line x1="8" y1="18" x2="21" y2="18" />
-        <line x1="3" y1="6" x2="3.01" y2="6" />
-        <line x1="3" y1="12" x2="3.01" y2="12" />
-        <line x1="3" y1="18" x2="3.01" y2="18" />
-    </svg>
 );

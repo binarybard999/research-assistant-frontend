@@ -121,6 +121,25 @@ const LibraryPage = () => {
     const getFilteredPapers = () => {
         let filtered = [...papers];
 
+        // Apply search first
+        if (searchTerm) {
+            const searchLower = searchTerm.toLowerCase();
+            filtered = filtered.filter(paper => {
+                return (
+                    paper.title.toLowerCase().includes(searchLower) ||
+                    (paper.abstract && paper.abstract.toLowerCase().includes(searchLower)) ||
+                    (paper.authors && (
+                        typeof paper.authors === 'string' 
+                            ? paper.authors.toLowerCase().includes(searchLower)
+                            : paper.authors.join(' ').toLowerCase().includes(searchLower)
+                    )) ||
+                    (paper.keywords && paper.keywords.some(keyword =>
+                        keyword.toLowerCase().includes(searchLower)
+                    ))
+                );
+            });
+        }
+
         // Apply filter
         if (filterOption === 'favorites') {
             filtered = filtered.filter(paper =>
@@ -135,15 +154,6 @@ const LibraryPage = () => {
                 .slice(0, 10);
             filtered = filtered.filter(paper =>
                 recentPaperIds.includes(paper._id)
-            );
-        }
-
-        // Apply search
-        if (searchTerm) {
-            filtered = filtered.filter(paper =>
-                paper.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                (paper.abstract && paper.abstract.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                (paper.authors && paper.authors.join(' ').toLowerCase().includes(searchTerm.toLowerCase()))
             );
         }
 

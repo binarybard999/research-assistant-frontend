@@ -1,6 +1,7 @@
 export * from './LibraryHeader';
 export * from './PaperCard';
 export * from './BulkActionsToolbar';
+export * from './SearchBar';
 export * from './EmptyState';
 export * from './ActivityFeed';
 export * from './ReadingListsSection';
