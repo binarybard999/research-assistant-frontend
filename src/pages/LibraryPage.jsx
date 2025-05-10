@@ -18,6 +18,7 @@ import { fetchActivity } from '../redux/slices/activitySlice';
 import {
     LibraryHeader,
     PaperCard,
+    PaperDetailsModal,
     ReadingListsSection,
     ActivityFeed,
     AddToListModal,
@@ -34,6 +35,8 @@ const LibraryPage = () => {
     const [filterOption, setFilterOption] = useState('all');
     const [sortOption, setSortOption] = useState('newest');
     const [selectedPapers, setSelectedPapers] = useState([]);
+    const [selectedPaper, setSelectedPaper] = useState(null);
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [modalState, setModalState] = useState({
         addToList: false,
         createList: false,
@@ -197,15 +200,17 @@ const LibraryPage = () => {
             {error && <p className="text-red-500 mb-4">{error}</p>}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredPapers.map(paper => (
-                    <ErrorBoundary key={paper._id} fallback={<div>Error rendering paper</div>}>
+                {filteredPapers.map(paper => (                    <ErrorBoundary key={paper._id} fallback={<div>Error rendering paper</div>}>
                         <PaperCard
                             paper={paper}
                             isSelected={selectedPapers.includes(paper._id)}
                             isFavorite={favorites.some(fav => fav?._id === paper._id)}
                             onSelect={handlePaperSelect}
                             onToggleFavorite={() => dispatch(toggleFavorite(paper._id))}
-                            onViewDetails={() => navigate(`/library/${paper._id}`)}
+                            onViewDetails={() => {
+                                setSelectedPaper(paper);
+                                setShowDetailsModal(true);
+                            }}
                             onAddToList={() => {
                                 setSelectedPapers([paper._id]);
                                 toggleModal('addToList');
@@ -218,6 +223,23 @@ const LibraryPage = () => {
             <EmptyState visible={filteredPapers.length === 0} />
 
             <ActivityFeed activities={activities} papers={papers} />
+
+            {/* Paper Details Modal */}
+            <PaperDetailsModal
+                isOpen={showDetailsModal}
+                paper={selectedPaper}
+                isFavorite={selectedPaper && favorites.some(fav => fav?._id === selectedPaper._id)}
+                onClose={() => setShowDetailsModal(false)}
+                onToggleFavorite={() => selectedPaper && dispatch(toggleFavorite(selectedPaper._id))}
+                onAddToList={() => {
+                    if (selectedPaper) {
+                        setSelectedPapers([selectedPaper._id]);
+                        setShowDetailsModal(false);
+                        toggleModal('addToList');
+                    }
+                }}
+                onDownload={() => selectedPaper && window.open(selectedPaper.url, '_blank')}
+            />
 
             <ReadingListsSection
                 lists={lists}

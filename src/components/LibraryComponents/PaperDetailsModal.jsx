@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
     X, FileText, Star, Calendar, Clock, Download, Share2,
     List, Tag, ExternalLink, BookOpen, ArrowLeft, ArrowRight,
-    Users, Bookmark, Link, Copy, ChevronDown
+    Users, Bookmark, Link, Copy, ChevronDown, AlignLeft
 } from 'lucide-react';
 
 export const PaperDetailsModal = ({
@@ -44,7 +44,7 @@ export const PaperDetailsModal = ({
     const citations = {
         apa: `${(paper.authors || 'Unknown Author').split(' and ')[0]} et al. (${new Date(paper.createdAt).getFullYear()}). ${paper.title}. ${paper.venue || 'Journal'}. ${paper.doi ? `https://doi.org/${paper.doi}` : ''}`,
         mla: `${(paper.authors || 'Unknown Author').split(' and ')[0]}, et al. "${paper.title}." ${paper.venue || 'Journal'}, ${new Date(paper.createdAt).getFullYear()}.`,
-        bibtex: `@article{${paper._id.substring(0, 8)},
+        bibtex: `@article{${paper._id?.substring(0, 8) || 'unknown'},
   title={${paper.title}},
   author={${paper.authors || 'Unknown Author'}},
   journal={${paper.venue || 'Journal'}},
@@ -58,8 +58,8 @@ export const PaperDetailsModal = ({
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-30 p-4 overflow-y-auto backdrop-blur-sm">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] flex flex-col animate-fadeIn">
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-30 p-4 overflow-y-auto backdrop-blur-sm" onClick={onClose}>
+            <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] flex flex-col animate-fadeIn" onClick={e => e.stopPropagation()}>
                 {/* Header */}
                 <div className="flex justify-between items-start p-6 border-b sticky top-0 bg-white rounded-t-2xl z-10">
                     <div className="flex-1">
@@ -94,6 +94,12 @@ export const PaperDetailsModal = ({
                             onClick={() => setActiveTab('abstract')}
                             label="Abstract"
                             icon={<BookOpen className="h-4 w-4" />}
+                        />
+                        <TabButton
+                            active={activeTab === 'summary'}
+                            onClick={() => setActiveTab('summary')}
+                            label="Summary"
+                            icon={<AlignLeft className="h-4 w-4" />}
                         />
                         <TabButton
                             active={activeTab === 'fulltext'}
@@ -134,6 +140,37 @@ export const PaperDetailsModal = ({
                                             </span>
                                         ))}
                                     </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {activeTab === 'summary' && (
+                        <div className="prose max-w-none">
+                            {paper.summary ? (
+                                <div className="space-y-6">
+                                    <div className="text-gray-700 leading-relaxed">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Summary</h3>
+                                        {paper.summary}
+                                    </div>
+                                    {paper.keyFindings && paper.keyFindings.length > 0 && (
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Key Findings</h3>
+                                            <ul className="list-disc pl-5 space-y-2">
+                                                {paper.keyFindings.map((finding, idx) => (
+                                                    <li key={idx} className="text-gray-700">{finding}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center py-16 text-center bg-gray-50 rounded-xl">
+                                    <AlignLeft className="h-16 w-16 text-blue-300 mb-4" />
+                                    <h3 className="text-xl font-medium text-gray-900 mb-2">No summary available</h3>
+                                    <p className="text-gray-500 mb-6 max-w-md">
+                                        This paper hasn't been analyzed yet. You can view the abstract or full text for more information.
+                                    </p>
                                 </div>
                             )}
                         </div>

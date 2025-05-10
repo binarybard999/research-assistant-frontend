@@ -9,3 +9,4 @@ export * from './ReadingListCard';
 export * from './AddToListModal';
 export * from './CreateListModal';
 export * from './TagModal';
+export * from './PaperDetailsModal';
