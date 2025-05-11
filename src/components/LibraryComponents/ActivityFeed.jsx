@@ -1,41 +1,82 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Activity, FileText, BookOpen, Star, Tag } from 'lucide-react';
 
-export const ActivityFeed = ({ activities, papers }) => (
-    <div className="mt-10 bg-white shadow-md rounded-xl overflow-hidden">
-        <div className="p-6 border-b border-gray-100">
-            <h2 className="text-xl font-bold text-gray-900 flex items-center">
-                <span className="bg-indigo-100 text-indigo-700 p-2 rounded-lg mr-3">
-                    <Activity className="h-5 w-5" />
-                </span>
-                Recent Activity
-            </h2>
-        </div>
+export const ActivityFeed = ({ activities = [], papers = [] }) => {
+    const [visibleCount, setVisibleCount] = useState(5);
+    const [autoScroll, setAutoScroll] = useState(true);
+    const feedRef = useRef(null);
 
-        <div className="max-h-96 overflow-y-auto">
-            {activities.length > 0 ? (
-                <ul className="divide-y">
-                    {activities.slice(0, 5).map((activity, index) => (
-                        <ActivityItem key={index} activity={activity} papers={papers} />
-                    ))}
-                </ul>
-            ) : (
-                <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-                    <Activity className="h-12 w-12 text-gray-300 mb-3" />
-                    <p className="text-gray-500 mb-1">No recent activity recorded.</p>
-                    <p className="text-sm text-gray-400">Activities will appear here as you interact with papers.</p>
+    // Auto-scroll to new activities
+    useEffect(() => {
+        if (autoScroll && feedRef.current && activities.length > 0) {
+            feedRef.current.scrollTop = 0;
+        }
+    }, [activities, autoScroll]);
+
+    const handleShowMore = () => {
+        setVisibleCount(prev => prev + 5);
+        setAutoScroll(false); // Disable auto-scroll when manually loading more
+    };
+
+    const handleScrollLoad = (e) => {
+        const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+        if (bottom && activities.length > visibleCount) {
+            handleShowMore();
+        }
+    };
+
+    return (
+        <div className="mt-10 bg-white shadow-md rounded-xl overflow-hidden">
+            <div className="p-6 border-b border-gray-100">
+                <div className="flex justify-between items-center">
+                    <h2 className="text-xl font-bold text-gray-900 flex items-center">
+                        <span className="bg-indigo-100 text-indigo-700 p-2 rounded-lg mr-3">
+                            <Activity className="h-5 w-5" />
+                        </span>
+                        Recent Activity
+                    </h2>
+                    <button
+                        className="text-sm text-blue-600 hover:text-blue-800"
+                        onClick={() => setVisibleCount(5)}
+                    >
+                        Reset View
+                    </button>
+                </div>
+            </div>
+
+            <div className="max-h-96 overflow-y-auto" onScroll={handleScrollLoad} ref={feedRef}>
+                {activities.length > 0 ? (
+                    <ul className="divide-y">
+                        {[...activities]
+                            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                            .slice(0, visibleCount)
+                            .map((activity, index) => (
+                                <ActivityItem
+                                    key={activity._id || index}
+                                    activity={activity}
+                                    papers={papers}
+                                />
+                            ))}
+
+                    </ul>
+                ) : (
+                    <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+                        <Activity className="h-12 w-12 text-gray-300 mb-3" />
+                        <p className="text-gray-500 mb-1">No recent activity recorded.</p>
+                        <p className="text-sm text-gray-400">Activities will appear here as you interact with papers.</p>
+                    </div>
+                )}
+            </div>
+            {activities.length > 5 && (
+                <div className="p-4 border-t border-gray-100 text-center">
+                    <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                        View All Activity
+                    </button>
                 </div>
             )}
         </div>
-        {activities.length > 5 && (
-            <div className="p-4 border-t border-gray-100 text-center">
-                <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                    View All Activity
-                </button>
-            </div>
-        )}
-    </div>
-);
+    );
+};
 
 const ActivityItem = ({ activity, papers }) => {
     const getIcon = () => {

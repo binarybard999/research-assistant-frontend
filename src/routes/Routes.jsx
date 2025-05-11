@@ -6,6 +6,8 @@ import { getCurrentUser } from '../redux/slices/authSlice';
 // Auth Pages
 import LoginPage from '../auth/LoginPage';
 import RegisterPage from '../auth/RegisterPage';
+import UserSettings from '../pages/UserSettings';
+import UserProfilePage from '../pages/UserProfilePage';
 
 // Layout
 import MainLayout from '../layout/MainLayout';
@@ -61,10 +63,10 @@ const AppRoutes = () => {
                     </AuthGuard>
                 }
             >
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/upload" element={<UploadPage />} />
-                {/* More routes as needed */}
+                <Route path="/dashboard" element={<DashboardPage />} />                <Route path="/upload" element={<UploadPage />} />
                 <Route path="/papers" element={<AllPapersPage />} />
+                <Route path="/settings" element={<UserSettings />} />
+                <Route path="/profile" element={<UserProfilePage />} />
 
                 <Route path="/papers/:id/chat" element={<PaperChatInterface />} />
 

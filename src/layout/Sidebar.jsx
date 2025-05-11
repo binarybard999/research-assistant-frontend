@@ -8,7 +8,6 @@ import axios from 'axios';
 const Sidebar = ({ isOpen, toggleSidebar }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
     const navItems = [
         { name: 'Dashboard', icon: <Home className="h-5 w-5" />, path: '/dashboard' },
         { name: 'Upload Paper', icon: <Upload className="h-5 w-5" />, path: '/upload' },

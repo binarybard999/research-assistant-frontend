@@ -54,10 +54,11 @@ const activitySlice = createSlice({
             .addCase(fetchActivity.pending, (state) => {
                 state.loading = true;
                 state.error = null;
-            })
-            .addCase(fetchActivity.fulfilled, (state, action) => {
+            })            .addCase(fetchActivity.fulfilled, (state, action) => {
                 state.loading = false;
-                state.feed = action.payload;
+                state.feed = Array.isArray(action.payload.activities) 
+                    ? action.payload.activities 
+                    : action.payload;
             })
             .addCase(fetchActivity.rejected, (state, action) => {
                 state.loading = false;

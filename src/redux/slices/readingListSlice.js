@@ -152,13 +152,22 @@ const readingListSlice = createSlice({
             // Delete list cases
             .addCase(deleteList.fulfilled, (state, action) => {
                 state.lists = state.lists.filter(list => list._id !== action.payload);
-            })
-
-            // Add to list cases
+            })            // Add to list cases
             .addCase(addToList.fulfilled, (state, action) => {
                 const index = state.lists.findIndex(list => list._id === action.payload._id);
                 if (index !== -1) {
-                    state.lists[index] = action.payload;
+                    // Preserve existing papers if backend doesn't return full paper details
+                    const updatedPapers = Array.isArray(action.payload.papers) 
+                        ? action.payload.papers.map(p => {
+                            const existingPaper = state.lists[index].papers.find(ep => ep._id === p._id);
+                            return existingPaper || p;
+                        })
+                        : state.lists[index].papers;
+                    
+                    state.lists[index] = {
+                        ...action.payload,
+                        papers: updatedPapers
+                    };
                 }
             })
 

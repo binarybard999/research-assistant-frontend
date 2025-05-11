@@ -56,13 +56,10 @@ const LibraryPage = () => {
         loading,
         error
     } = useSelector(state => state.library);
-    const { lists } = useSelector(state => state.lists);
-    const { feed: activities } = useSelector(state => state.activity);
+    const { lists } = useSelector(state => state.lists);    const { feed: activities } = useSelector(state => state.activity);
 
     // Derived state
-    const favorites = Array.isArray(rawFavorites) ? rawFavorites : rawFavorites?.papers || [];
-
-    // Data fetching
+    const favorites = Array.isArray(rawFavorites) ? rawFavorites : rawFavorites?.papers || [];// Data fetching
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -78,18 +75,26 @@ const LibraryPage = () => {
                 console.error("Error fetching initial data:", error);
             }
         };
+        
+        // Set up activity auto-refresh
+                const refreshActivity = () => dispatch(fetchActivity());
+        const activityRefreshInterval = setInterval(refreshActivity, 30000); // Refresh every 30 seconds
+        
+        if (papers.length === 0 && lists.length === 0) {
+            fetchData();
+        }
 
-        if (papers.length === 0 && lists.length === 0) fetchData();
-    }, [dispatch]);
-
-    // Paper selection handlers
+        return () => {
+            clearInterval(activityRefreshInterval);
+        };
+    }, [dispatch]);    // Paper selection handlers
     const handlePaperSelect = (paperId) => {
         setSelectedPapers(prev => prev.includes(paperId)
             ? prev.filter(id => id !== paperId)
             : [...prev, paperId]
         );
     };
-
+    
     const handleSelectAll = () => {
         setSelectedPapers(prev =>
             prev.length === filteredPapers.length
@@ -98,11 +103,19 @@ const LibraryPage = () => {
         );
     };
 
+    // Refresh activity feed after actions
+    const refreshAfterAction = async (action) => {
+        await action();
+        dispatch(fetchActivity());
+    };
+
     // List operations
     const handleCreateList = () => {
         if (listData.name.trim()) {
-            dispatch(createList({ ...listData, isPublic: false }))
-                .then(() => setModalState(prev => ({ ...prev, createList: false })));
+            refreshAfterAction(async () => {
+                await dispatch(createList({ ...listData, isPublic: false }));
+                setModalState(prev => ({ ...prev, createList: false }));
+            });
         }
     };
 
@@ -206,7 +219,7 @@ const LibraryPage = () => {
                             isSelected={selectedPapers.includes(paper._id)}
                             isFavorite={favorites.some(fav => fav?._id === paper._id)}
                             onSelect={handlePaperSelect}
-                            onToggleFavorite={() => dispatch(toggleFavorite(paper._id))}
+                            onToggleFavorite={() => refreshAfterAction(() => dispatch(toggleFavorite(paper._id)))}
                             onViewDetails={() => {
                                 setSelectedPaper(paper);
                                 setShowDetailsModal(true);
@@ -230,7 +243,7 @@ const LibraryPage = () => {
                 paper={selectedPaper}
                 isFavorite={selectedPaper && favorites.some(fav => fav?._id === selectedPaper._id)}
                 onClose={() => setShowDetailsModal(false)}
-                onToggleFavorite={() => selectedPaper && dispatch(toggleFavorite(selectedPaper._id))}
+                onToggleFavorite={() => selectedPaper && refreshAfterAction(() => dispatch(toggleFavorite(selectedPaper._id)))}
                 onAddToList={() => {
                     if (selectedPaper) {
                         setSelectedPapers([selectedPaper._id]);
@@ -255,12 +268,11 @@ const LibraryPage = () => {
                     toggleModal('addToList');
                     toggleModal('createList');
                 }}
-                onSubmit={(listId) => {
-                    dispatch(addToList({ listId, paperIds: selectedPapers }))
-                        .then(() => {
-                            setSelectedPapers([]);
-                            toggleModal('addToList');
-                        });
+                onSubmit={(listId) => {                    refreshAfterAction(async () => {
+                        await dispatch(addToList({ listId, paperIds: selectedPapers }));
+                        setSelectedPapers([]);
+                        toggleModal('addToList');
+                    });
                 }}
             />
 
@@ -277,12 +289,12 @@ const LibraryPage = () => {
                 tagInput={tagInput}
                 onClose={() => toggleModal('tag')}
                 onChange={setTagInput}
-                onSubmit={(tags) => {
-                    dispatch(bulkTagPapers({
-                        paperIds: selectedPapers,
-                        tags: tags.split(',').map(tag => tag.trim()),
-                        operation: 'add'
-                    })).then(() => {
+                onSubmit={(tags) => {                    refreshAfterAction(async () => {
+                        await dispatch(bulkTagPapers({
+                            paperIds: selectedPapers,
+                            tags: tags.split(',').map(tag => tag.trim()),
+                            operation: 'add'
+                        }));
                         setTagInput('');
                         toggleModal('tag');
                         setSelectedPapers([]);
