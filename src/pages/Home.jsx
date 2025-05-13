@@ -1,237 +1,255 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { FileText, Book, Users, Search, Bell, User, Settings, ChevronDown } from 'lucide-react';
-import { logout } from '../redux/slices/authSlice';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import {
+    FileText,
+    Book,
+    Users,
+    Search,
+    ArrowRight,
+    Brain,
+    Sparkles
+} from 'lucide-react';
 
 const Home = () => {
-    const { user, isAuthenticated } = useSelector(state => state.auth);
-    const [userMenuOpen, setUserMenuOpen] = useState(false);
-    const userMenuRef = useRef(null);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        // Add event listener to close dropdown when clicking outside
-        function handleClickOutside(event) {
-            if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
-                setUserMenuOpen(false);
-            }
-        }
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
-    const toggleUserMenu = () => {
-        setUserMenuOpen(!userMenuOpen);
-    };
-
-    const handleSignOut = () => {
-        dispatch(logout());
-        navigate('/login');
-        setUserMenuOpen(false);
-    };
+    const { isAuthenticated } = useSelector(state => state.auth);
 
     const features = [
         {
-            icon: <FileText className="h-8 w-8 text-blue-600" />,
+            icon: <FileText className="h-10 w-10 text-blue-600" />,
             title: 'Upload Papers',
             description: 'Easily upload and analyze research papers in various formats including PDF, DOCX, and more.',
         },
         {
-            icon: <Search className="h-8 w-8 text-blue-600" />,
+            icon: <Brain className="h-10 w-10 text-blue-600" />,
             title: 'Smart Analysis',
             description: 'Get AI-powered summaries, key findings, and insights from your research papers.',
         },
         {
-            icon: <Book className="h-8 w-8 text-blue-600" />,
+            icon: <Book className="h-10 w-10 text-blue-600" />,
             title: 'Research Library',
             description: 'Organize your papers in a personal library with custom tags and categories.',
         },
         {
-            icon: <Users className="h-8 w-8 text-blue-600" />,
+            icon: <Users className="h-10 w-10 text-blue-600" />,
             title: 'Collaboration',
             description: 'Share papers with colleagues and collaborate on research projects.',
         },
     ];
 
+    const testimonials = [
+        {
+            quote: "Research Assistant has completely transformed how I manage my literature review. I've saved countless hours.",
+            author: "Dr. Sarah Chen",
+            role: "Professor of Neuroscience"
+        },
+        {
+            quote: "The AI-powered summaries helped me quickly grasp complex papers outside my field. Game changer for interdisciplinary research.",
+            author: "Michael Rodriguez",
+            role: "PhD Candidate"
+        },
+        {
+            quote: "I love how I can collaborate with my team on shared papers. The organization features are intuitive and powerful.",
+            author: "Dr. James Wilson",
+            role: "Research Director"
+        }
+    ];
+
     return (
-        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-            {/* Header */}
-            <header className="bg-white shadow-sm">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between h-16 items-center">
-                        <div className="flex-shrink-0 flex items-center">
-                            <span className="text-2xl font-bold text-blue-600 hidden sm:block">Research Assistant</span>
-                            <span className="text-2xl font-bold text-blue-600 sm:hidden">RA</span>
-                        </div>
-                        <div className="flex items-center space-x-2 sm:space-x-4">
-                            {isAuthenticated ? (
-                                <div className="flex items-center">
-                                    <button className="flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2 sm:mr-3">
-                                        <span className="sr-only">View notifications</span>
-                                        <Bell className="h-5 w-5 sm:h-6 sm:w-6" />
-                                    </button>
-
-                                    <div className="relative" ref={userMenuRef}>
-                                        <button
-                                            onClick={toggleUserMenu}
-                                            className="flex items-center max-w-xs bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        <div className="bg-gradient-to-br from-blue-50 via-white to-blue-50">
+            {/* Hero Section */}
+            <section>
+                <div className="container mx-auto px-4 pt-16 lg:pt-24 pb-16">
+                    <div className="flex flex-col lg:flex-row items-center">
+                        <div className="w-full lg:w-1/2 mb-12 lg:mb-0">
+                            <div className="lg:pr-12">
+                                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 leading-tight">
+                                    <span className="text-blue-600">Transform</span> Your Research Process
+                                </h1>
+                                <p className="mt-6 text-xl text-gray-600 leading-relaxed">
+                                    Upload research papers, get AI-powered summaries, and organize your knowledge in one powerful platform designed for modern researchers.
+                                </p>
+                                <div className="mt-10 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                                    {!isAuthenticated ? (
+                                        <>
+                                            <Link
+                                                to="/register"
+                                                className="flex items-center justify-center bg-blue-600 px-8 py-4 rounded-xl text-white font-medium hover:bg-blue-700 transition shadow-lg"
+                                            >
+                                                Start for free
+                                                <ArrowRight className="ml-2 h-5 w-5" />
+                                            </Link>
+                                            <Link
+                                                to="/demo"
+                                                className="flex items-center justify-center px-8 py-4 rounded-xl border-2 border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition"
+                                            >
+                                                Watch demo
+                                            </Link>
+                                        </>
+                                    ) : (
+                                        <Link
+                                            to="/dashboard"
+                                            className="flex items-center justify-center bg-blue-600 px-8 py-4 rounded-xl text-white font-medium hover:bg-blue-700 transition shadow-lg"
                                         >
-                                            <span className="sr-only">Open user menu</span>
-                                            <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                                                <User className="h-5 w-5 text-blue-600" />
+                                            Go to Dashboard
+                                            <ArrowRight className="ml-2 h-5 w-5" />
+                                        </Link>
+                                    )}
+                                </div>
+                                <div className="mt-8 flex items-center">
+                                    <div className="flex -space-x-2">
+                                        {[1, 2, 3, 4].map(index => (
+                                            <div key={index} className={`h-8 w-8 rounded-full bg-blue-${index}00 border-2 border-white flex items-center justify-center`}>
+                                                <Users className={`h-4 w-4 text-blue-${10 - index}00`} />
                                             </div>
-                                            {user && (
-                                                <div className="ml-2 flex items-center">
-                                                    <span className="text-sm font-medium text-gray-700 hidden md:block">
-                                                        {user.name || user.email}
-                                                    </span>
-                                                    <ChevronDown className="h-4 w-4 ml-1 text-gray-500 hidden md:block" />
-                                                </div>
-                                            )}
-                                        </button>
-
-                                        {userMenuOpen && (
-                                            <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                                                <div className="py-1" role="menu">
-                                                    <div className="px-4 py-2 border-b border-gray-100">
-                                                        <p className="text-sm font-medium text-gray-900">{user?.name || 'User'}</p>
-                                                        <p className="text-xs text-gray-500 truncate">{user?.email || ''}</p>
-                                                    </div>
-                                                    <Link
-                                                        to="/profile"
-                                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                        role="menuitem"
-                                                        onClick={() => setUserMenuOpen(false)}
-                                                    >
-                                                        Your Profile
-                                                    </Link>
-                                                    <Link
-                                                        to="/settings"
-                                                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                        role="menuitem"
-                                                        onClick={() => setUserMenuOpen(false)}
-                                                    >
-                                                        <Settings className="h-4 w-4 mr-2" />
-                                                        Settings
-                                                    </Link>
-                                                    <button
-                                                        onClick={handleSignOut}
-                                                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                                                        role="menuitem"
-                                                    >
-                                                        Sign Out
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        )}
+                                        ))}
+                                    </div>
+                                    <span className="ml-3 text-sm text-gray-600">Join 5,000+ researchers</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="w-full lg:w-1/2">
+                            <div className="relative rounded-2xl shadow-2xl overflow-hidden bg-white border border-gray-200">
+                                <div className="p-1 bg-gradient-to-r from-blue-400 to-blue-600">
+                                    <div className="flex space-x-2 px-3 py-1">
+                                        <div className="rounded-full h-3 w-3 bg-red-500"></div>
+                                        <div className="rounded-full h-3 w-3 bg-yellow-500"></div>
+                                        <div className="rounded-full h-3 w-3 bg-green-500"></div>
                                     </div>
                                 </div>
-                            ) : (
-                                <>
-                                    <Link to="/login" className="text-gray-700 hover:text-blue-600 font-medium text-sm sm:text-base">
-                                        Sign In
-                                    </Link>
-                                    <Link
-                                        to="/register"
-                                        className="bg-blue-600 px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-white font-medium hover:bg-blue-700 transition text-sm sm:text-base"
-                                    >
-                                        Get Started
-                                    </Link>
-                                </>
-                            )}
+                                <div className="p-6">
+                                    <div className="flex items-center mb-4">
+                                        <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
+                                            <FileText className="h-6 w-6 text-blue-600" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-medium">ResearchPaper.pdf</h3>
+                                            <p className="text-sm text-gray-500">Uploaded 2 minutes ago</p>
+                                        </div>
+                                    </div>
+                                    <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                                        <div className="flex items-center mb-2">
+                                            <Sparkles className="h-5 w-5 text-blue-600 mr-2" />
+                                            <h4 className="font-medium">AI Summary</h4>
+                                        </div>
+                                        <p className="text-sm text-gray-600">This research investigates the effects of neural networks on climate prediction models, showing a 34% improvement in accuracy when compared to traditional methods...</p>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Machine Learning</span>
+                                        <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Climate Research</span>
+                                        <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">Neural Networks</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <button className="text-blue-600 text-sm font-medium">View details</button>
+                                        <div className="flex space-x-2">
+                                            <button className="p-1 rounded bg-gray-100 hover:bg-gray-200">
+                                                <Users className="h-4 w-4 text-gray-600" />
+                                            </button>
+                                            <button className="p-1 rounded bg-gray-100 hover:bg-gray-200">
+                                                <Search className="h-4 w-4 text-gray-600" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </header>
-
-            {/* Hero Section */}
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24">
-                <div className="text-center">
-                    <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-                        Accelerate your Research
-                    </h1>
-                    <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-600">
-                        Upload research papers, get AI-powered summaries, and organize your knowledge in one place.
-                    </p>
-                    <div className="mt-10 flex justify-center">
-                        {!isAuthenticated ? (
-                            <>
-                                <Link
-                                    to="/register"
-                                    className="bg-blue-600 px-8 py-3 rounded-md text-white font-medium hover:bg-blue-700 transition text-lg"
-                                >
-                                    Start for free
-                                </Link>
-                                <Link
-                                    to="/login"
-                                    className="ml-4 px-8 py-3 rounded-md border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition text-lg"
-                                >
-                                    Learn more
-                                </Link>
-                            </>
-                        ) : (
-                            <Link
-                                to="/dashboard"
-                                className="bg-blue-600 px-8 py-3 rounded-md text-white font-medium hover:bg-blue-700 transition text-lg"
-                            >
-                                Go to Dashboard
-                            </Link>
-                        )}
-                    </div>
-                </div>
-            </div>
+            </section>
 
             {/* Features Section */}
-            <div className="bg-white py-16">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <section className="bg-white py-16 lg:py-24">
+                <div className="container mx-auto px-4">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl font-extrabold text-gray-900">
-                            Powerful features for researchers
+                        <span className="inline-block px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-medium mb-4">POWERFUL FEATURES</span>
+                        <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+                            Everything you need to excel in research
                         </h2>
-                        <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
-                            Everything you need to manage and analyze your research papers.
+                        <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-600">
+                            Tools designed specifically for researchers to manage, analyze, and collaborate on papers.
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {features.map((feature, index) => (
-                            <div key={index} className="text-center bg-white p-6 rounded-lg shadow-md">
-                                <div className="flex justify-center">{feature.icon}</div>
-                                <h3 className="mt-4 text-lg font-medium text-gray-900">{feature.title}</h3>
-                                <p className="mt-2 text-base text-gray-600">{feature.description}</p>
+                            <div
+                                key={index}
+                                className="bg-white rounded-xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition duration-300 hover:border-blue-100"
+                            >
+                                <div className="h-16 w-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-6">
+                                    {feature.icon}
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
+                                <p className="text-gray-600">{feature.description}</p>
+                                <div className="mt-4">
+                                    <Link to="/features" className="inline-flex items-center text-blue-600 font-medium hover:text-blue-700">
+                                        Learn more <ArrowRight className="ml-1 h-4 w-4" />
+                                    </Link>
+                                </div>
                             </div>
                         ))}
                     </div>
                 </div>
-            </div>
+            </section>
+
+            {/* Testimonials */}
+            <section className="bg-gradient-to-b from-white to-blue-50 py-16 lg:py-24">
+                <div className="container mx-auto px-4">
+                    <div className="text-center mb-16">
+                        <span className="inline-block px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-medium mb-4">TESTIMONIALS</span>
+                        <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+                            Trusted by researchers worldwide
+                        </h2>
+                        <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-600">
+                            See how Research Assistant is helping academics and scientists save time and improve their work.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {testimonials.map((testimonial, index) => (
+                            <div key={index} className="bg-white rounded-xl p-8 shadow-md border border-gray-100">
+                                <div className="flex mb-6">
+                                    {[1, 2, 3, 4, 5].map(star => (
+                                        <svg key={star} className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                    ))}
+                                </div>
+                                <p className="text-gray-700 mb-6 italic">"{testimonial.quote}"</p>
+                                <div>
+                                    <p className="font-bold text-gray-900">{testimonial.author}</p>
+                                    <p className="text-gray-500 text-sm">{testimonial.role}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
             {/* CTA Section */}
-            <div className="bg-blue-600">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                    <div className="text-center">
-                        <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-                            Ready to get started?
-                        </h2>
-                        <p className="mt-4 text-lg text-blue-100 max-w-2xl mx-auto">
-                            Join thousands of researchers who are using Research Assistant to accelerate their work.
-                        </p>
-                        <div className="mt-8">
+            <section className="bg-blue-600 py-16 lg:py-20">
+                <div className="container mx-auto px-4">
+                    <div className="flex flex-col lg:flex-row items-center justify-between">
+                        <div className="w-full lg:w-2/3 text-center lg:text-left mb-8 lg:mb-0">
+                            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                                Ready to revolutionize your research?
+                            </h2>
+                            <p className="mt-4 text-xl text-blue-100 max-w-2xl">
+                                Join thousands of researchers who are using Research Assistant to accelerate their work and make breakthrough discoveries.
+                            </p>
+                        </div>
+                        <div className="w-full lg:w-1/3 flex justify-center lg:justify-end">
                             {!isAuthenticated ? (
                                 <Link
                                     to="/register"
-                                    className="bg-white px-8 py-3 rounded-md text-blue-600 font-medium hover:bg-gray-100 transition"
+                                    className="bg-white px-8 py-4 rounded-xl text-blue-600 font-medium hover:bg-gray-100 transition shadow-md text-center inline-block"
                                 >
-                                    Sign up now
+                                    Start your free trial today
                                 </Link>
                             ) : (
                                 <Link
                                     to="/dashboard"
-                                    className="bg-white px-8 py-3 rounded-md text-blue-600 font-medium hover:bg-gray-100 transition"
+                                    className="bg-white px-8 py-4 rounded-xl text-blue-600 font-medium hover:bg-gray-100 transition shadow-md text-center inline-block"
                                 >
                                     Go to Dashboard
                                 </Link>
@@ -239,48 +257,7 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-
-            {/* Footer */}
-            <footer className="bg-gray-800 text-white py-12">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex flex-col md:flex-row justify-between">
-                        <div className="mb-8 md:mb-0">
-                            <span className="text-2xl font-bold">Research Assistant</span>
-                            <p className="mt-2 text-gray-300">Making research easier for everyone.</p>
-                        </div>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-                            <div>
-                                <h3 className="text-lg font-semibold mb-4">Product</h3>
-                                <ul className="space-y-2">
-                                    <li><a href="#" className="text-gray-300 hover:text-white">Features</a></li>
-                                    <li><a href="#" className="text-gray-300 hover:text-white">Pricing</a></li>
-                                    <li><a href="#" className="text-gray-300 hover:text-white">Testimonials</a></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 className="text-lg font-semibold mb-4">Resources</h3>
-                                <ul className="space-y-2">
-                                    <li><a href="#" className="text-gray-300 hover:text-white">Documentation</a></li>
-                                    <li><a href="#" className="text-gray-300 hover:text-white">Guides</a></li>
-                                    <li><a href="#" className="text-gray-300 hover:text-white">API</a></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 className="text-lg font-semibold mb-4">Company</h3>
-                                <ul className="space-y-2">
-                                    <li><a href="#" className="text-gray-300 hover:text-white">About Us</a></li>
-                                    <li><a href="#" className="text-gray-300 hover:text-white">Blog</a></li>
-                                    <li><a href="#" className="text-gray-300 hover:text-white">Contact</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-300">
-                        <p>&copy; {new Date().getFullYear()} Research Assistant. All rights reserved.</p>
-                    </div>
-                </div>
-            </footer>
+            </section>
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { Home, Upload, FileText, BookOpen, Users, Settings, LogOut, X } from 'lucide-react';
+import { Home, Upload, FileText, BookOpen, Users, Settings, LogOut, X, Link } from 'lucide-react';
 import { logout } from '../redux/slices/authSlice.js';
 import axios from 'axios';
 
@@ -41,7 +41,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <div className="hidden lg:block lg:w-64 lg:flex-shrink-0">
                 <div className="h-full w-64 bg-white border-r border-gray-200">
                     <div className="h-16 flex items-center px-6 border-b border-gray-200">
-                        <span className="text-2xl font-bold text-blue-600">RA</span>
+                        <NavLink to="/dashboard"><span className="text-2xl font-bold text-blue-600">RA</span> </NavLink>
                     </div>
                     <div className="flex-1 overflow-y-auto">
                         <nav className="px-3 py-4">
