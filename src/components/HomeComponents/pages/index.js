@@ -1,0 +1,9 @@
+export { default as PrivacyPage } from './PrivacyPage';
+export { default as TermsOfService } from './TermsOfService';
+export { default as Documentation } from './Documentation';
+export { default as Support } from './Support';
+export { default as About } from './About';
+export { default as Pricing } from './Pricing';
+export { default as Demo } from './Demo';
+export { default as Blog } from './Blog';
+export { default as APIDocumentation } from './APIDocumentation';

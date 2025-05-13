@@ -40,6 +40,12 @@ const uploadSlice = createSlice({
         },
         setUploadProgress: (state, action) => {
             state.progress = action.payload;
+        },
+        resetUpload: (state) => {
+            state.papers = [];
+            state.error = null;
+            state.progress = 0;
+            state.loading = false;
         }
     },
     extraReducers: (builder) => {
@@ -57,7 +63,15 @@ const uploadSlice = createSlice({
             })
             .addCase(uploadPaper.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload?.message || 'Upload failed';
+                state.error = action.payload || 'Upload failed';
+
+                if (action.payload?.message) {
+                    state.error = {
+                        message: action.payload.message,
+                        failedFiles: action.payload.rejectedFiles
+                    };
+                }
+
                 state.remainingUploads = action.payload?.limits?.remaining;
                 state.tierLimits = action.payload?.limits;
 
@@ -72,5 +86,5 @@ const uploadSlice = createSlice({
     }
 });
 
-export const { resetUploadState, setUploadProgress } = uploadSlice.actions;
+export const { resetUploadState, setUploadProgress, resetUpload } = uploadSlice.actions;
 export default uploadSlice.reducer;
