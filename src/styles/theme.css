@@ -1,0 +1,315 @@
+@theme {
+    /* Core colors - Light mode */
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f8fafc;
+    --color-bg-tertiary: #f1f5f9;
+
+    --color-text-primary: #0f172a;
+    --color-text-secondary: #334155;
+    --color-text-tertiary: #64748b;
+
+    --color-border-primary: #e2e8f0;
+    --color-border-secondary: #cbd5e1;
+
+    /* Brand colors */
+    --color-brand-primary: #2563eb;
+    --color-brand-hover: #1d4ed8;
+    --color-brand-light: #dbeafe;
+    --color-brand-dark: #1e40af;
+
+    /* Semantic colors */
+    --color-success: #22c55e;
+    --color-success-light: #dcfce7;
+    --color-success-dark: #15803d;
+
+    --color-error: #ef4444;
+    --color-error-light: #fee2e2;
+    --color-error-dark: #b91c1c;
+
+    --color-warning: #f59e0b;
+    --color-warning-light: #fef3c7;
+    --color-warning-dark: #b45309;
+
+    --color-info: #3b82f6;
+    --color-info-light: #dbeafe;
+    --color-info-dark: #1d4ed8;
+
+    /* Component-specific colors */
+    --color-card-bg: var(--color-bg-primary);
+    --color-card-border: var(--color-border-primary);
+
+    --color-input-bg: var(--color-bg-primary);
+    --color-input-border: var(--color-border-primary);
+    --color-input-focus: var(--color-brand-primary);
+
+    --color-button-primary-bg: var(--color-brand-primary);
+    --color-button-primary-text: #ffffff;
+    --color-button-primary-hover: var(--color-brand-hover);
+
+    --color-button-secondary-bg: var(--color-bg-tertiary);
+    --color-button-secondary-text: var(--color-text-secondary);
+    --color-button-secondary-hover: var(--color-bg-secondary);
+}
+
+/* Dark mode overrides */
+:root[data-theme="dark"] {
+    @theme {
+        /* Core colors - Dark mode */
+        --color-bg-primary: #0f172a;
+        --color-bg-secondary: #1e293b;
+        --color-bg-tertiary: #334155;
+
+        --color-text-primary: #f8fafc;
+        --color-text-secondary: #e2e8f0;
+        --color-text-tertiary: #cbd5e1;
+
+        --color-border-primary: #334155;
+        --color-border-secondary: #475569;
+
+        /* Brand colors - Dark mode */
+        --color-brand-primary: #3b82f6;
+        --color-brand-hover: #60a5fa;
+        --color-brand-light: #1e3a8a;
+        --color-brand-dark: #93c5fd;
+
+        /* Semantic colors - Dark mode */
+        --color-success: #4ade80;
+        --color-success-light: #064e3b;
+        --color-success-dark: #a7f3d0;
+
+        --color-error: #f87171;
+        --color-error-light: #450a0a;
+        --color-error-dark: #fecaca;
+
+        --color-warning: #fbbf24;
+        --color-warning-light: #451a03;
+        --color-warning-dark: #fde68a;
+
+        --color-info: #60a5fa;
+        --color-info-light: #172554;
+        --color-info-dark: #bfdbfe;
+
+        /* Component colors - Dark mode */
+        --color-card-bg: var(--color-bg-primary);
+        --color-card-border: var(--color-border-primary);
+
+        --color-input-bg: var(--color-bg-primary);
+        --color-input-border: var(--color-border-primary);
+        --color-input-focus: var(--color-brand-primary);
+
+        --color-button-primary-bg: var(--color-brand-primary);
+        --color-button-primary-text: var(--color-bg-primary);
+        --color-button-primary-hover: var(--color-brand-hover);
+
+        --color-button-secondary-bg: var(--color-bg-tertiary);
+        --color-button-secondary-text: var(--color-text-secondary);
+        --color-button-secondary-hover: var(--color-bg-secondary);
+    }
+}
+
+/* Component-specific styles using Tailwind utilities */
+@layer components {
+
+    /* Card */
+    .card {
+        @apply bg-[--color-card-bg] border-[--color-card-border] rounded-lg shadow-md;
+    }
+
+    /* Buttons */
+    .btn-primary {
+        @apply bg-[--color-button-primary-bg] text-[--color-button-primary-text] hover:bg-[--color-button-primary-hover] px-4 py-2 rounded-md font-medium transition-colors duration-150;
+    }
+
+    .btn-secondary {
+        @apply bg-[--color-button-secondary-bg] text-[--color-button-secondary-text] hover:bg-[--color-button-secondary-hover] px-4 py-2 rounded-md font-medium transition-colors duration-150;
+    }
+
+    /* Input */
+    .input-field {
+        @apply bg-[--color-input-bg] border-[--color-input-border] text-[--color-text-primary] rounded-lg focus:ring-2 focus:ring-[--color-input-focus] focus:border-[--color-input-focus] px-3 py-2 w-full transition-all duration-150;
+    }
+
+    /* Form Elements */
+    .form-control {
+        @apply bg-[--color-input-bg] text-[--color-text-primary] border-[--color-input-border] rounded-md px-3 py-2 w-full focus:border-[--color-input-focus] focus:ring-2 focus:ring-[--color-brand-light] outline-none transition-all duration-150;
+    }
+
+    .form-label {
+        @apply text-[--color-text-secondary] text-sm font-medium mb-2;
+    }
+
+    .form-hint {
+        @apply text-[--color-text-tertiary] text-sm mt-2;
+    }
+
+    .form-error {
+        @apply text-[--color-error] text-sm mt-2;
+    }
+
+    /* Badge/Tags */
+    .badge {
+        @apply px-3 py-1 rounded-full text-xs font-medium;
+    }
+
+    .badge-primary {
+        @apply bg-[--color-brand-light] text-[--color-brand-primary];
+    }
+
+    .badge-success {
+        @apply bg-[--color-success-light] text-[--color-success];
+    }
+
+    .badge-error {
+        @apply bg-[--color-error-light] text-[--color-error];
+    }
+
+    .badge-warning {
+        @apply bg-[--color-warning-light] text-[--color-warning];
+    }
+
+    /* Navigation */
+    .nav-link {
+        @apply text-[--color-text-secondary] hover:text-[--color-brand-primary] hover:bg-[--color-bg-secondary] px-2 py-1 rounded-md transition-all duration-150;
+    }
+
+    .nav-link.active {
+        @apply text-[--color-brand-primary] bg-[--color-brand-light];
+    }
+
+    /* Dropdown */
+    .dropdown-menu {
+        @apply bg-[--color-bg-primary] border-[--color-border-primary] rounded-lg shadow-lg;
+    }
+
+    .dropdown-item {
+        @apply text-[--color-text-primary] hover:bg-[--color-bg-secondary] px-3 py-2;
+    }
+
+    /* Tables */
+    .table {
+        @apply w-full border-collapse;
+    }
+
+    .table th {
+        @apply bg-[--color-bg-secondary] text-[--color-text-secondary] text-xs font-medium uppercase tracking-wider px-4 py-3 text-left;
+    }
+
+    .table td {
+        @apply text-[--color-text-primary] px-4 py-3 border-b border-[--color-border-primary];
+    }
+
+    .table tr:nth-child(even) {
+        @apply bg-[--color-bg-secondary];
+    }
+
+    /* Modal */
+    .modal-backdrop {
+        @apply fixed inset-0 bg-black/50 backdrop-blur-sm;
+    }
+
+    .modal-container {
+        @apply bg-[--color-bg-primary] rounded-xl shadow-2xl max-w-md w-full mx-auto my-8;
+    }
+
+    .modal-header {
+        @apply px-6 py-4 border-b border-[--color-border-primary];
+    }
+
+    .modal-body {
+        @apply p-6;
+    }
+
+    .modal-footer {
+        @apply px-6 py-4 border-t border-[--color-border-primary];
+    }
+
+    /* Toast/Notifications */
+    .toast {
+        @apply bg-[--color-bg-primary] border rounded-lg p-4 mb-4 shadow-md;
+    }
+
+    .toast-success {
+        @apply border-[--color-success] bg-[--color-success-light];
+    }
+
+    .toast-error {
+        @apply border-[--color-error] bg-[--color-error-light];
+    }
+
+    .toast-warning {
+        @apply border-[--color-warning] bg-[--color-warning-light];
+    }
+
+    .toast-info {
+        @apply border-[--color-info] bg-[--color-info-light];
+    }
+
+    /* Markdown Content */
+    .markdown-content {
+        @apply text-[--color-text-primary] leading-relaxed;
+    }
+
+    .markdown-content h1,
+    .markdown-content h2,
+    .markdown-content h3,
+    .markdown-content h4 {
+        @apply text-[--color-text-primary] font-semibold mt-6 mb-2;
+    }
+
+    .markdown-content a {
+        @apply text-[--color-brand-primary] underline;
+    }
+
+    .markdown-content code {
+        @apply bg-[--color-bg-secondary] text-[--color-text-primary] px-1 py-0.5 rounded font-mono;
+    }
+
+    .markdown-content pre {
+        @apply bg-[--color-bg-secondary] p-4 rounded-lg overflow-x-auto;
+    }
+
+    .markdown-content blockquote {
+        @apply border-l-4 border-[--color-border-secondary] pl-4 text-[--color-text-tertiary] italic;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        @apply bg-[--color-bg-primary] border-r border-[--color-border-primary];
+    }
+
+    .sidebar-item {
+        @apply text-[--color-text-secondary] px-4 py-2 rounded-md m-1 hover:bg-[--color-bg-secondary] hover:text-[--color-text-primary] transition-all duration-150;
+    }
+
+    .sidebar-item-active {
+        @apply bg-[--color-brand-light] text-[--color-brand-primary];
+    }
+
+    /* Utility Classes */
+    .gradient-brand {
+        @apply bg-gradient-to-r from-[--color-brand-primary] to-[--color-brand-hover];
+    }
+
+    .gradient-card-hover {
+        @apply transition-shadow duration-300 hover:shadow-lg;
+    }
+}
+
+/* Custom utilities for Tailwind v4.1 */
+@layer utilities {
+
+    /* Text shadow utilities */
+    .text-shadow-brand {
+        text-shadow: 0 2px 4px var(--color-brand-dark);
+    }
+
+    /* Overflow wrap for better text handling */
+    .overflow-wrap-anywhere {
+        overflow-wrap: anywhere;
+    }
+
+    /* Mask utilities for decorative effects */
+    .mask-gradient {
+        mask-image: linear-gradient(to bottom, black, transparent);
+    }
+}

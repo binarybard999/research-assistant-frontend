@@ -8,6 +8,7 @@ import toastReducer from './slices/toastSlice.js';
 import libraryReducer from './slices/librarySlice.js';
 import readingListReducer from './slices/readingListSlice.js';
 import activityReducer from './slices/activitySlice.js';
+import themeReducer from './slices/themeSlice.js';
 
 // Persist config for auth slice
 const authPersistConfig = {
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
     library: persistReducer(libraryPersistConfig, libraryReducer),
     lists: readingListReducer,
     activity: activityReducer,
+    theme: themeReducer,
 });
 
 const store = configureStore({
